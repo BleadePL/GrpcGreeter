@@ -69,14 +69,17 @@ while (flag)
 
         case 3:
             Console.WriteLine("saving Data");
-            Console.WriteLine("Put filepath: ");
-            
+            Console.Write("Put filepath: ");
 
-            //string filePath = Console.ReadLine();
+            //B:\\PWR\\Semestr 6\\Rozproszone systemy informatyczne\\Laboratorium\\Zadania\\Zadanie3\\test.png
+            //B:\\PWR\\Semestr 6\\Rozproszone systemy informatyczne\\Laboratorium\\Zadania\\Zadanie3\\otter.jpg
 
-           // FileStream stream = File.OpenRead("B:\\PWR\\Semestr 6\\Rozproszone systemy informatyczne\\Laboratorium\\Zadania\\Zadanie3\\test.png");
+            string filePath = Console.ReadLine();
 
-            var filetest = File.ReadAllBytes("B:\\PWR\\Semestr 6\\Rozproszone systemy informatyczne\\Laboratorium\\Zadania\\Zadanie3\\test.png");
+            Console.WriteLine("input fileName: ");
+            string fileTitle = Console.ReadLine();
+
+            var filetest = File.ReadAllBytes(filePath);
 
             var photo = new Photos.PhotosClient(channel);
 
@@ -89,7 +92,7 @@ while (flag)
             {
                 foreach (var item in arrays)
                 {
-                    await call.RequestStream.WriteAsync(new UploadPhotoRequest() { Image = ByteString.CopyFrom(item), FileName = "test.png", FileSize= filetest.Length});
+                    await call.RequestStream.WriteAsync(new UploadPhotoRequest() { Image = ByteString.CopyFrom(item), FileName = fileTitle, FileSize= filetest.Length});
                     ProgressBar.draw(tmp+=10, filetest.Length);
                 }
                 await call.RequestStream.CompleteAsync();
@@ -99,6 +102,55 @@ while (flag)
             break;
 
         case 4:
+            var photo2 = new Photos.PhotosClient(channel);
+            try
+            {
+
+                Console.WriteLine("Availible files:");
+
+                FileNamesRequest req = new FileNamesRequest();
+                using (var call = photo2.GetFileNames(req))
+                {
+                    while (await call.ResponseStream.MoveNext(CancellationToken.None))
+                    {
+                        var currentTitle = call.ResponseStream.Current;
+                        Console.WriteLine($"{currentTitle.FileName}");
+                    }
+                }
+
+                Console.Write("Chosen file: ");
+                string fileName = Console.ReadLine();
+
+                GetFileRequest fileReq = new GetFileRequest() { FileName = fileName };
+
+                int counter = 0;
+                
+                using(var call2 = photo2.GetFile(fileReq))
+                {
+                    var path = Path.Combine("Download", fileName);
+                    while (await call2.ResponseStream.MoveNext(CancellationToken.None))
+                    {
+                        var currentBytes = call2.ResponseStream.Current.Image;
+                        var fs = new FileStream(path, FileMode.Append);
+
+             
+
+                        fs.Write(currentBytes.ToByteArray());
+                        fs.Close();
+                    }
+                       
+                }
+
+
+
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
             break;
 
         case 5:

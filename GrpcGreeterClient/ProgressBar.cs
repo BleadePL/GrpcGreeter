@@ -123,5 +123,118 @@ namespace GrpcGreeterClient
 
             }
         }
+
+        public static string drawString(int actPos, int size)
+        {
+            double progress = (double)((double)actPos / (double)size) * 100;
+
+
+            switch (progress)
+            {
+                case <= 10.0:
+                    if (!ProgressBarDict[10])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[10] = true;
+                        return("[*---------] Progress");
+                    }
+                    break;
+
+                case <= 20.0:
+                    if (!ProgressBarDict[20])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[20] = true;
+                        return("[**--------] Progress");
+                    }
+                    break;
+
+                case <= 30.0:
+                    if (!ProgressBarDict[30])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[30] = true;
+                        return ("[***-------] Progress");
+                    }
+                    break;
+
+                case <= 40.0:
+                    if (!ProgressBarDict[40])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[40] = true;
+                        return ("[****------] Progress");
+                    }
+                    break;
+
+                case <= 50.0:
+                    if (!ProgressBarDict[50])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[50] = true;
+                        return ("[*****-----] Progress");
+                    }
+                    break;
+
+                case <= 60.0:
+                    if (!ProgressBarDict[60])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[60] = true;
+                        return ("[******----] Progress");
+                    }
+                    break;
+
+                case <= 70.0:
+                    if (!ProgressBarDict[70])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[70] = true;
+                        return ("[*******---] Progress");
+                    }
+                    break;
+
+                case <= 80.0:
+                    if (!ProgressBarDict[80])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[80] = true;
+                        return ("[********--] Progress");
+                    }
+                    break;
+
+                case <= 90:
+                    if (!ProgressBarDict[90])
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Sending Data to server");
+                        ProgressBarDict[90] = true;
+                        return ("[*********-] Progress");
+                    }
+                    break;
+                case 100.0 or >= 100:
+                    Console.Clear();
+                    Console.WriteLine("Data was sent");
+
+                    foreach (var item in ProgressBarDict.Keys)
+                    {
+                        ProgressBarDict[item] = false;
+                    }
+                    return ("[**********] Done");
+
+                    break;
+
+            }
+            return "";
+        }
+
     }
 }

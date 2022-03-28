@@ -1,3 +1,4 @@
+using Google.Protobuf;
 using Grpc.Core;
 using GrpcGreeter;
 
@@ -15,19 +16,6 @@ namespace GrpcGreeter.Services
 
         public override async Task<UploadPhotosResponse> UploadPhoto(IAsyncStreamReader<UploadPhotoRequest> requestStream, ServerCallContext context)
         {
-            //requestStream.MoveNext();
-/*            Console.WriteLine("passsseedd");
-            var path = Path.Combine(uploadPath, requestStream.Current.FileName);
-            var fs = File.Create(path, requestStream.Current.FileSize);*/
-
-
-/*            do
-            {
-                fs.Write(requestStream.Current.Image.ToArray());
-            } while (requestStream.Current.FileSize == fs.Position);*/
-
-
-
 
             while (await requestStream.MoveNext())
             {
@@ -36,11 +24,6 @@ namespace GrpcGreeter.Services
                 var fs = new FileStream(path, FileMode.Append);
                 fs.Write(requestStream.Current.Image.ToArray());
                 fs.Close();
-/*                
-
-
-                var fs = File.Create(path, requestStream.Current.FileSize);
-                Console.WriteLine(path);*/
             }
 
 
@@ -50,5 +33,38 @@ namespace GrpcGreeter.Services
             });
 
         }
+
+
+        public override async Task GetFileNames(FileNamesRequest request, IServerStreamWriter<FileNamesResponse> responseStream, ServerCallContext context)
+        {
+            var tmp = new DirectoryInfo(uploadPath);
+            FileInfo[] files = tmp.GetFiles();
+
+            foreach (var file in files)
+            {
+                await responseStream.WriteAsync(new FileNamesResponse { FileName = file.Name });
+            }
+
+        }
+
+        public override async Task GetFile(GetFileRequest request, IServerStreamWriter<GetFileResponse> responseStream, ServerCallContext context)
+        {
+            var path = Path.Combine(uploadPath, request.FileName);
+
+            var byteFile = File.ReadAllBytes(path);
+
+            var arrays = byteFile.Chunk(10).ToList();
+
+
+            foreach (var bytes in arrays)
+            {
+                await responseStream.WriteAsync(new GetFileResponse 
+                { FileName = request.FileName, FileSize = bytes.Length, 
+                    Image= ByteString.CopyFrom(bytes) }
+                );
+            }
+
+        }
+
     }
 }

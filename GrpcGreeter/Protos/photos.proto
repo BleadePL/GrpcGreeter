@@ -6,8 +6,11 @@ package photos;
 
 service Photos {
   rpc UploadPhoto (stream UploadPhotoRequest) returns (UploadPhotosResponse);
+  rpc GetFileNames (FileNamesRequest) returns (stream FileNamesResponse);
+  rpc GetFile (GetFileRequest) returns (stream GetFileResponse);
 }
 
+//UploadPhoto
 message UploadPhotoRequest {
   bytes image = 1;
   string fileName = 2;
@@ -17,3 +20,33 @@ message UploadPhotoRequest {
 message UploadPhotosResponse {
   string message = 1;
 }
+//End of UploadPhoto
+
+
+//GetFileNames
+
+message FileNamesRequest{
+
+}
+
+message FileNamesResponse{
+	string fileName = 1;
+}
+
+//End of GetFileNames
+
+
+//GetFile
+message GetFileRequest{
+	string fileName = 1;
+}
+
+message GetFileResponse{
+	bytes image = 1;
+	string fileName = 2;
+	int32 fileSize = 3;
+	int32 currentBytePassed = 4;
+}
+
+
+//End of GetFile
