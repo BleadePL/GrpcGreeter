@@ -10,7 +10,6 @@ service Users {
 }
 
 message UserRequest {
-  int32 companyId = 1;
 }
 
 message UserResponse {

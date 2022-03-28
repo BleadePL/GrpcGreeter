@@ -14,24 +14,15 @@ namespace GrpcGreeter.Services
         private static List<UserResponse> _users = new List<UserResponse>();
 
 
-        private List<UserResponse> getUsers(int companyId)
-        {
-            _users.Add(new UserResponse() { CompanyId = 1, FirstName = "f1", LastName = "s1", Email = "email@gmail.com" });
-            return _users;
-        }
-
-
         public override Task<UserResponse> AddUser(UserAddRequest request, ServerCallContext context)
         {
-            Console.WriteLine("Pierwszy z add");
             _users.Add(new UserResponse() { CompanyId = request.CompanyId, FirstName = request.FirstName, LastName = request.LastName, Email = request.Email });
             return Task.FromResult(new UserResponse(_users.Last()));
         }
 
         public override async Task GetUsers(UserRequest request, IServerStreamWriter<UserResponse> responseStream, ServerCallContext context)
         {
-            Console.WriteLine("Pierwszy z getusers");
-            var users = getUsers(request.CompanyId);
+            var users = _users;
             Console.WriteLine(users.Count);
             foreach (var user in users)
             {
