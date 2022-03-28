@@ -1,10 +1,16 @@
 ﻿using System.Threading.Tasks;
+using Google.Protobuf;
+using Grpc.Core;
 using Grpc.Net.Client;
 using GrpcClient;
+using GrpcGreeter;
+using GrpcGreeterClient;
 
 // The port number must match the port of the gRPC server.
 using var channel = GrpcChannel.ForAddress("https://localhost:5001");
 var user = new Users.UsersClient(channel);
+
+
 
 bool flag = true;
 
@@ -62,6 +68,35 @@ while (flag)
             break;
 
         case 3:
+            Console.WriteLine("saving Data");
+            Console.WriteLine("Put filepath: ");
+            
+
+            //string filePath = Console.ReadLine();
+
+           // FileStream stream = File.OpenRead("B:\\PWR\\Semestr 6\\Rozproszone systemy informatyczne\\Laboratorium\\Zadania\\Zadanie3\\test.png");
+
+            var filetest = File.ReadAllBytes("B:\\PWR\\Semestr 6\\Rozproszone systemy informatyczne\\Laboratorium\\Zadania\\Zadanie3\\test.png");
+
+
+            var photo = new Photos.PhotosClient(channel);
+
+            Console.WriteLine("pass");
+            var tmp = 1;
+
+            using (var call = photo.UploadPhoto())
+            {
+                foreach (var item in filetest)
+                {
+                    await call.RequestStream.WriteAsync(new UploadPhotoRequest() { Image = ByteString.CopyFrom(item), FileName = "test.png", FileSize= filetest.Length});
+                    ProgressBar.draw(tmp++, filetest.Length);
+                }
+                await call.RequestStream.CompleteAsync();
+                var summary = await call.ResponseAsync;
+            }
+
+
+
             break;
 
         case 4:

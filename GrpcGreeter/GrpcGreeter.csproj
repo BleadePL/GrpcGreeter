@@ -7,16 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\photos.proto" />
     <None Remove="Protos\users.proto" />
   </ItemGroup>
 
   <ItemGroup>
+    <Protobuf Include="Protos\photos.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\users.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Upload\" />
   </ItemGroup>
 
 </Project>

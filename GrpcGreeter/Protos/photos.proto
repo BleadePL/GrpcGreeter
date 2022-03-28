@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcGreeter";
+
+package photos;
+
+service Photos {
+  rpc UploadPhoto (stream UploadPhotoRequest) returns (UploadPhotosResponse);
+}
+
+message UploadPhotoRequest {
+  bytes image = 1;
+  string fileName = 2;
+  int32 fileSize = 3;
+}
+
+message UploadPhotosResponse {
+  string message = 1;
+}
