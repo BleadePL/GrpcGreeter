@@ -85,7 +85,7 @@ namespace GrpcGreeterClient
                     {
                         Console.Clear();
                         Console.WriteLine("Sending Data to server");
-                        Console.WriteLine("[********---] Progress");
+                        Console.WriteLine("[*******---] Progress");
                         ProgressBarDict[70] = true;
                     }
                     break;
@@ -109,7 +109,7 @@ namespace GrpcGreeterClient
                         ProgressBarDict[90] = true;
                     }
                     break;
-                case 100.0:
+                case 100.0 or >= 100:
                     Console.Clear();
                     Console.WriteLine("Data was sent");
                     Console.WriteLine("[**********] Done");
@@ -122,9 +122,6 @@ namespace GrpcGreeterClient
                     break;
 
             }
-
-
         }
-
     }
 }

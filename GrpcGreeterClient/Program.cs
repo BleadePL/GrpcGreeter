@@ -78,24 +78,23 @@ while (flag)
 
             var filetest = File.ReadAllBytes("B:\\PWR\\Semestr 6\\Rozproszone systemy informatyczne\\Laboratorium\\Zadania\\Zadanie3\\test.png");
 
-
             var photo = new Photos.PhotosClient(channel);
 
             Console.WriteLine("pass");
-            var tmp = 1;
+            var tmp = 0;
+
+            var arrays = filetest.Chunk(10).ToList();
 
             using (var call = photo.UploadPhoto())
             {
-                foreach (var item in filetest)
+                foreach (var item in arrays)
                 {
                     await call.RequestStream.WriteAsync(new UploadPhotoRequest() { Image = ByteString.CopyFrom(item), FileName = "test.png", FileSize= filetest.Length});
-                    ProgressBar.draw(tmp++, filetest.Length);
+                    ProgressBar.draw(tmp+=10, filetest.Length);
                 }
                 await call.RequestStream.CompleteAsync();
                 var summary = await call.ResponseAsync;
             }
-
-
 
             break;
 
